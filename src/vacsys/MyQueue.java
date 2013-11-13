@@ -24,4 +24,8 @@ public class MyQueue<Patient> {
 	public Patient dequeue() {
 		return queuedata.remove();
 	}
+	
+	public Patient peek() {
+		return queuedata.peek();
+	}
 }

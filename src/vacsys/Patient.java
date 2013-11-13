@@ -20,4 +20,8 @@ public class Patient implements Comparable<Patient> {
 		// 0 translates to "equal"
 		return (this.priorityVal - p2.priorityVal);
 	}
+	
+	public String toString() {
+		return (name + "," + age + "," + zip + "," + priorityVal + "\n");
+	}
 }

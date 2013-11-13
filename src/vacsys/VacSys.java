@@ -88,11 +88,7 @@ public class VacSys {
 		try {
 			fw = new FileWriter(filename);
 			for (int n = 0; n < num; n++) {
-				try {
-					fw.append(this.remove());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				fw.append(this.remove());
 			}
 			fw.flush();
 			fw.close();
