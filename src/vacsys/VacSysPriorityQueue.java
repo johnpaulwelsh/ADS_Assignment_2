@@ -1,6 +1,6 @@
 package vacsys;
 
-public interface VacSysPriorityQueue<Patient> {
+public interface VacSysPriorityQueue<T> {
 
 	public boolean isEmpty();
 

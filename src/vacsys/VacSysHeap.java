@@ -3,14 +3,12 @@ package vacsys;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class VacSysHeap<Patient> implements
-VacSysPriorityQueue<Patient> {
+public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 	protected ArrayList<MyQueue<Patient>> heapdata;
 	protected HashMap<Integer, MyQueue<Patient>> queuehash;
 
 	public VacSysHeap() {
 		this.heapdata = new ArrayList<MyQueue<Patient>>();
-		this.ziphash = new HashMap<Integer, Integer>();
 		this.queuehash = new HashMap<Integer, MyQueue<Patient>>();
 	}
 
@@ -21,6 +19,9 @@ VacSysPriorityQueue<Patient> {
 
 	@Override
 	public void insert(Patient item) {
+		
+		
+		
 		/*
 		 * PSEUDOCODE 
 		 * ==========
@@ -34,7 +35,7 @@ VacSysPriorityQueue<Patient> {
 		 */
 	}
 
-	private void addToQueue(T item, int queuePriority) {
+	private void addToQueue(Patient item, int queuePriority) {
 
 	}
 

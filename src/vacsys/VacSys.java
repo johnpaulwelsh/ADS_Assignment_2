@@ -23,7 +23,7 @@ public class VacSys {
 	}
 
 	private void populate() {
-		// Calculare all zpops
+		// Calculate all zpops and puts them into ziphash
 		try {
 			String line;
 			String[] linelist = null;
@@ -69,34 +69,37 @@ public class VacSys {
 	}
 
 	public boolean insert(String name, int age, int zip) {
-		
 		zpop = ziphash.get(zip);
-
 		float fzpop = (float) zpop;
 		float ftpop = (float) tpop;
 		int priorityVal = (int) ((Math.abs(35 - age) / 5.0) + ((fzpop / ftpop) * 10.0));
 
 		Patient p = new Patient(name, age, zip, priorityVal);
-		
 		vsh.insert(p);
-		
 		return true;
 	}
 
 	public String remove() {
-		if (!(vsh.isEmpty())) {
-			return vsh.remove();
-		}
-		return "null";
+		return vsh.remove();
 	}
 
 	public boolean remove(int num, String filename) {
-		String[] removedList = new String[num];
-		for (int n = 0; n < num; n++) {
-			removedList[n] = this.remove();
+		FileWriter fw;
+		try {
+			fw = new FileWriter(filename);
+			for (int n = 0; n < num; n++) {
+				try {
+					fw.append(this.remove());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			fw.flush();
+			fw.close();
+			return true;
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			return false;
 		}
-		System.out.println(removedList);
-		// Write the removedList to 'filename'
-		return true;
 	}
 }
