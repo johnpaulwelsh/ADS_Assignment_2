@@ -80,6 +80,7 @@ public class VacSys {
 	}
 
 	public String remove() {
+		ziphash.remove(vsh.heapdata.get(0).peek().zip);
 		return vsh.remove();
 	}
 

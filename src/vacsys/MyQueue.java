@@ -2,7 +2,7 @@ package vacsys;
 
 import java.util.LinkedList;
 
-public class MyQueue<Patient> {
+public class MyQueue<T> {
 	protected LinkedList<Patient> queuedata;
 
 	public MyQueue() {
@@ -27,5 +27,13 @@ public class MyQueue<Patient> {
 	
 	public Patient peek() {
 		return queuedata.peek();
+	}
+	
+	public String toString() {
+		String result = "";
+		for (int i = 0; i < this.queueSize(); i++) {
+			result.concat(queuedata.get(i).toString());
+		}
+		return result;
 	}
 }

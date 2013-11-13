@@ -48,51 +48,16 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 
 	@Override
 	public String remove() {
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// REMOVE THE ENTRY FROM BOTH HASHMAPS
-		
-		/*
-			String result = "";
-			
-			// We use .get(0) because we always remove from the top element
-			Patient[] removedList = new Patient[heapdata.get(0).queueSize()];
-			// Takes all the entries in the top MyQueue and puts them into an
-			// array of removed elements
-			for (int i = 0; i < heapdata.get(0).queueSize(); i++) {
-				removedList[i] = (Patient) heapdata.get(0).dequeue();
-			}
-			// If there are no more elements in the queue
-			if (heapdata.get(0).isEmpty()) {
-				// Take it out of the heap (remove the node)
-				heapdata.remove(0);
-				// Put the last element into the first spot
-				heapdata.add(0, heapdata.get(heapdata.size()-1));
-				// Rebuild
-				this.rebuildFromRemove();
-				// reassign hashmaps
-			}
-			
-			// Compile the list of removed elements into a string which we will return
-			for (int j = 0; j < removedList.length; j++) {
-				result = result + removedList[j].toString();
-			}
-			
-			return result;
-		*/
+		MyQueue<Patient> topQueue = heapdata.get(0);
+		MyQueue<Patient> lastQueue = heapdata.get(heapdata.size()-1);
+		queuehash.remove(topQueue);
+		heapdata.remove(0);
+		heapdata.set(0, lastQueue);
+		rebuildFromRemove(0);
+		return topQueue.toString();
 	}
 
-	private void rebuildFromRemove() {
+	private void rebuildFromRemove(int index) {
 		
 	}
 }
