@@ -1,11 +1,5 @@
 package vacsys;
 
-/**
- * Runner class for testing a VacSys.
- * 
- * @author John Paul Welsh
- * @param args
- */
 public class Run {
 
 	public static void main(String[] args) {
