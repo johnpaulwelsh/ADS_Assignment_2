@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 	protected ArrayList<MyQueue<Patient>> heapdata;
-	protected HashMap<Integer, MyQueue<Patient>> queuehash;
+	protected HashMap<Integer, MyQueue<Patient>> queuehash; // key = priorityVal, value = queue
 
 	public VacSysHeap() {
 		this.heapdata = new ArrayList<MyQueue<Patient>>();
@@ -19,18 +19,29 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 
 	@Override
 	public void insert(Patient item) {
-		if (heapdata.isEmpty()) {
-			MyQueue<Patient> nQueue = new MyQueue<Patient>();
-			heapdata.add(0, nQueue);
-		} else if (queuehash.containsKey(item.priorityVal)) {
+			
+		// The queuehash already has the queue we want and the heap is not empty
+		if (!(heapdata.isEmpty()) && queuehash.containsKey(item.priorityVal)) {
+			// Get the queue from queuehash
 			MyQueue<Patient> existingQueue = queuehash.get(item.priorityVal);
+			// Enqueue the patient
 			existingQueue.enqueue(item);
+			
+		// The queue we need is not in the heap, or the heap is empty
 		} else {
+			// Make a new queue
 			MyQueue<Patient> nQueue = new MyQueue<Patient>();
-			// add to hashmap!!!
-			heapdata.add(heapdata.size()-1, nQueue); // heapdata.size()-1 is the last element
-			heapdata.get(heapdata.size()-1).enqueue(item);
-			rebuildFromInsert(heapdata.size()-1);
+			// Enqueue the patient
+			nQueue.enqueue(item);
+			// Add it to the heap (at the end)
+			heapdata.add(nQueue);
+			// Add it to queuehash
+			queuehash.put(nQueue.priorityVal, nQueue);
+			
+			// If the heap wasn't empty to start with
+			if (heapdata.size() > 1) {
+				rebuildFromInsert(heapdata.size()-1);
+			}
 		}
 	}
 
@@ -49,12 +60,18 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		MyQueue<Patient> temp = child;
 		child = parent;
 		parent = temp;
+		
+		System.out.println("Child: " + child.priorityVal + " swapped with Parent: " + parent.priorityVal);
 	}
 
   	@Override
 	public String remove() {
 		// Store top queue from heap
 		MyQueue<Patient> topQueue = heapdata.get(0);
+		
+		// POSSIBLY REMOVE FROM ZIPHASH IN HERE, AFTER CHECKING THAT WE NEED TO
+		
+		// Store next patient from top queue
 		Patient removedPat = topQueue.dequeue();
 		
 		// Could be the case because we just removed the last one in the line above
