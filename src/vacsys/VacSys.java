@@ -142,11 +142,13 @@ public class VacSys {
 		}
 	}
 
-	public String remove() {		
-		// DECREMENT ENTRY IN ZIPHASH
+	public String remove() {
+		
+		// DECREMENT ENTRY IN ZIPHASH: DO THIS LATER
+		/*
 		int currVal = ziphash.get(vsh.heapdata.get(0).peek().zip);
 		ziphash.put(vsh.heapdata.get(0).peek().zip, currVal-1);
-		
+		*/
 		// Decrement tpop
 		tpop--;
 		
