@@ -143,11 +143,15 @@ public class VacSys {
 	}
 
 	public String remove() {
-		System.out.println("Inside vacsys.remove()");
-		
-		// DECREMENT ENTRY IN ZIPHASH
+		/*
+		// Take the current number of people at this zipcode and decrement it
+		if () {
+			
+		}
+		Patient removed = vsh.heapdata.get(0).peek();
 		int currVal = ziphash.get(vsh.heapdata.get(0).peek().zip);
 		ziphash.put(vsh.heapdata.get(0).peek().zip, currVal-1);
+		*/
 		
 		// Decrement tpop
 		tpop--;
@@ -155,6 +159,13 @@ public class VacSys {
 		return vsh.remove();
 	}
 
+	/**
+	 * Method for removing multiple Patients from the system and writing their
+	 * information to a file. Calls the other remove() function in this class.
+	 * @param num the number of Patients we need to remove
+	 * @param filename the name of the file we need to write our results to
+	 * @return true if the method executed correctly, false otherwise
+	 */
 	public boolean remove(int num, String filename) {
 		FileWriter fw;
 		try {
