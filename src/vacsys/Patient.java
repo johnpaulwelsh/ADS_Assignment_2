@@ -13,6 +13,13 @@ public class Patient implements Comparable<Patient> {
 		this.priorityVal = priorityVal;
 	}
 
+	/**
+	 * Method to define how two Patient objects can be compared to each other.
+	 * 
+	 * @return the difference between the priorityVals of the Patients being
+	 *         compared. A negative number translates to "less than", a positive
+	 *         number translates to "greater than", and 0 translates to "equal".
+	 */
 	@Override
 	public int compareTo(Patient p2) {
 		// Any negative number translates to "less than"
@@ -20,7 +27,12 @@ public class Patient implements Comparable<Patient> {
 		// 0 translates to "equal"
 		return (this.priorityVal - p2.priorityVal);
 	}
-	
+
+	/**
+	 * Method to create a string representation of the data in a Patient object.
+	 * 
+	 * @return a string representation of the Patient, with newline at end
+	 */
 	public String toString() {
 		return (name + "," + age + "," + zip + "," + priorityVal + "\n");
 	}
