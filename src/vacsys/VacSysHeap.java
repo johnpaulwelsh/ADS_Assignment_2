@@ -19,15 +19,15 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 
 	@Override
 	public void insert(Patient item) {
-			
+
 		// The queuehash already has the queue we want and the heap is not empty
 		if (!(heapdata.isEmpty()) && queuehash.containsKey(item.priorityVal)) {
 			// Get the queue from queuehash
 			MyQueue<Patient> existingQueue = queuehash.get(item.priorityVal);
 			// Enqueue the patient
 			existingQueue.enqueue(item);
-			
-		// The queue we need is not in the heap, or the heap is empty
+
+			// The queue we need is not in the heap, or the heap is empty
 		} else {
 			// Make a new queue
 			MyQueue<Patient> nQueue = new MyQueue<Patient>();
@@ -37,9 +37,9 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 			heapdata.add(nQueue);
 			// Add it to queuehash
 			queuehash.put(nQueue.priorityVal, nQueue);
-			
+
 			//System.out.println("Added queue with priority " + nQueue.priorityVal);
-			
+
 			// If the heap wasn't empty to start with
 			if (heapdata.size() > 1) {
 				rebuildFromInsert(heapdata.size()-1);
@@ -57,59 +57,72 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 			return;
 		}
 	}
-	
+
 	private void swap(MyQueue<Patient> child, MyQueue<Patient> parent, int childIndex, int parentIndex) {
 		MyQueue<Patient> temp = child;
 		heapdata.set(childIndex, parent);
 		heapdata.set(parentIndex, temp);
-		//System.out.println("Child: " + child.priorityVal + " swapped with Parent: " + parent.priorityVal);
+		System.out.println("Child: " + child.priorityVal + " swapped with Parent: " + parent.priorityVal);
 	}
 
-  	@Override
+	@Override
 	public String remove() {
 		// Store top queue from heap
 		MyQueue<Patient> topQueue = heapdata.get(0);
-		
+
 		// POSSIBLY REMOVE FROM ZIPHASH IN HERE, AFTER CHECKING THAT WE NEED TO
-		
+
 		// Store next patient from top queue
 		Patient removedPat = topQueue.dequeue();
-		
-		//System.out.println("removedPat = " + removedPat.toString());
-		
+
 		// Could be the case because we just removed the last one in the line above
-		
 		if (topQueue.isEmpty()) {
-			
+
 			System.out.println("The top queue is empty.");
-			
+
 			// Store last queue from heap
 			MyQueue<Patient> lastQueue = heapdata.get(heapdata.size()-1);
 			// Remove top queue from hash
 			queuehash.remove(topQueue);
 			// Remove top queue from heap
 			heapdata.remove(0);
-			// Put the last queue into the top spot
+			// Remove last queue and move into top spot
 			heapdata.set(0, lastQueue);
+			heapdata.remove(heapdata.size()-1);
 			// Trickle down
 			rebuildFromRemove(0);
 			
-			
-			
-			System.out.println("The top element is now " + heapdata.get(0).priorityVal);
+			System.out.println("Done rebuilding.");
+
+			for (int i = 0; i < heapdata.size(); i++) {
+				System.out.println("Queue: " + heapdata.get(i).priorityVal);
+			}
 		}
-		
+
 		// Finally, return the removed Patient (in String form)
 		return removedPat.toString();
 	}
 
 	// HERE BE THE ERROR ------V
-  	
-  	private void rebuildFromRemove(int index) {
-		boolean outOfBounds = (index < heapdata.size());
+	private void rebuildFromRemove(int index) {
+		boolean outOfBounds = (index > heapdata.size());
 		MyQueue<Patient> parent = heapdata.get(index);
 		MyQueue<Patient> leftChild = heapdata.get(2*index+1);
 		MyQueue<Patient> rightChild = heapdata.get(2*index+2);
+
+		/*if (!(outOfBounds)) {
+			if (parent.compareTo(leftChild) < 0) {
+				swap(leftChild, parent, 2*index+1, index);
+				this.rebuildFromRemove(2*index+1);
+			} else if (parent.compareTo(rightChild) < 0) {
+				swap(rightChild, parent, 2*index+2, index);
+				this.rebuildFromRemove(2*index+2);
+			} else {
+				return;
+			}
+		} else {
+			return;
+		}*/
 		
 		if (!(outOfBounds) && parent.compareTo(leftChild) < 0) {
 			swap(leftChild, parent, 2*index+1, index);
@@ -120,5 +133,6 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		} else {
 			return;
 		}
+		
 	}
 }

@@ -22,9 +22,6 @@ public class Patient implements Comparable<Patient> {
 	 */
 	@Override
 	public int compareTo(Patient p2) {
-		// Any negative number translates to "less than"
-		// Any positive number translates to "greater than"
-		// 0 translates to "equal"
 		return (this.priorityVal - p2.priorityVal);
 	}
 
