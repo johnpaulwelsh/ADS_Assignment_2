@@ -38,7 +38,7 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 			// Add it to queuehash
 			queuehash.put(nQueue.priorityVal, nQueue);
 			
-			System.out.println("Added queue with priority " + nQueue.priorityVal);
+			//System.out.println("Added queue with priority " + nQueue.priorityVal);
 			
 			// If the heap wasn't empty to start with
 			if (heapdata.size() > 1) {
@@ -65,19 +65,18 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		//parent = temp;		
 		heapdata.set(parentIndex, temp);
 
-		System.out.println("Child: " + child.priorityVal + " swapped with Parent: " + parent.priorityVal);
+		//System.out.println("Child: " + child.priorityVal + " swapped with Parent: " + parent.priorityVal);
 	}
 
   	@Override
 	public String remove() {
 		// Store top queue from heap
 		MyQueue<Patient> topQueue = heapdata.get(0);
-		System.out.println(topQueue.peek().toString());
-				
+		
+		// POSSIBLY REMOVE FROM ZIPHASH IN HERE, AFTER CHECKING THAT WE NEED TO
+		
 		// Store next patient from top queue
 		Patient removedPat = topQueue.dequeue();
-		
-		System.out.println("Queue size: " + topQueue.queueSize());
 		
 		// Could be the case because we just removed the last one in the line above
 		if (topQueue.isEmpty()) {
@@ -98,17 +97,15 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 	}
 
 	private void rebuildFromRemove(int index) {
-		// WRONG WRONG WRONG WRONG WRONG
-		
-		boolean outOfBounds = index > heapdata.size();
+		boolean outOfBounds = (index < heapdata.size());
 		MyQueue<Patient> parent = heapdata.get(index);
 		MyQueue<Patient> leftChild = heapdata.get(2*index+1);
 		MyQueue<Patient> rightChild = heapdata.get(2*index+2);
 		
-		if (!(outOfBounds) && leftChild.compareTo(parent) > 0) {
+		if (!(outOfBounds) && parent.compareTo(leftChild) < 0) {
 			swap(leftChild, parent, 2*index+1, index);
 			this.rebuildFromRemove(2*index+1);
-		} else if (!(outOfBounds) && rightChild.compareTo(parent) > 0) {
+		} else if (!(outOfBounds) && parent.compareTo(rightChild) < 0) {
 			swap(rightChild, parent, 2*index+2, index);
 			this.rebuildFromRemove(2*index+2);
 		} else {
