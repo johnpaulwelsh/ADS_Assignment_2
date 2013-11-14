@@ -18,6 +18,7 @@ public class VacSys {
 
 	public VacSys(String filename) {
 		this.vsh = new VacSysHeap<Patient>();
+		this.ziphash = new HashMap<Integer, Integer>();
 		this.filename = filename;
 		this.populate();
 	}
@@ -32,7 +33,12 @@ public class VacSys {
 			while ((line = reader.readLine()) != null) {
 				linelist = line.split(",");
 				
+				for (int i = 0; i < linelist.length; i++) {
+					linelist[i] = linelist[i].trim();
+				}
+
 				int currZip = Integer.parseInt(linelist[2]);
+				
 				if (ziphash.containsKey(currZip)) {
 					int currVal = ziphash.get(currZip);
 					ziphash.put(currZip, currVal + 1);
@@ -47,6 +53,8 @@ public class VacSys {
 			System.err.format("BadFileFormat: %s%n", x);
 		}
 		
+		System.out.println("Zpop mapping is done.");
+		
 		// Insert Patients
 		try {
 			String line;
@@ -55,6 +63,12 @@ public class VacSys {
 					this.filename));
 			while ((line = reader.readLine()) != null) {
 				linelist = line.split(",");
+				
+				for (int i = 0; i < linelist.length; i++) {
+					linelist[i] = linelist[i].trim();
+				}
+				
+				//System.out.println(linelist[0]);
 				
 				this.insert(linelist[0],
 					Integer.parseInt(linelist[1]),
@@ -66,6 +80,8 @@ public class VacSys {
 		} catch (ArrayIndexOutOfBoundsException x) {
 			System.err.format("BadFileFormat: %s%n", x);
 		}
+		
+		System.out.println("Insert from file is done.");
 	}
 
 	public boolean insert(String name, int age, int zip) {
@@ -80,7 +96,12 @@ public class VacSys {
 	}
 
 	public String remove() {
+		System.out.println("Inside vacsys.remove()");
+		
+		// INVESTIGATE THIS LINE
 		ziphash.remove(vsh.heapdata.get(0).peek().zip);
+		
+		tpop--;
 		return vsh.remove();
 	}
 

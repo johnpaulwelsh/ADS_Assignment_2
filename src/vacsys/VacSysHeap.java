@@ -19,12 +19,17 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 
 	@Override
 	public void insert(Patient item) {
-		if (queuehash.containsKey(item.priorityVal)) {
+		if (heapdata.isEmpty()) {
+			MyQueue<Patient> nQueue = new MyQueue<Patient>();
+			heapdata.add(0, nQueue);
+		} else if (queuehash.containsKey(item.priorityVal)) {
 			MyQueue<Patient> existingQueue = queuehash.get(item.priorityVal);
 			existingQueue.enqueue(item);
 		} else {
 			MyQueue<Patient> nQueue = new MyQueue<Patient>();
+			// add to hashmap!!!
 			heapdata.add(heapdata.size()-1, nQueue); // heapdata.size()-1 is the last element
+			heapdata.get(heapdata.size()-1).enqueue(item);
 			rebuildFromInsert(heapdata.size()-1);
 		}
 	}
@@ -32,7 +37,7 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 	private void rebuildFromInsert(int index) {
 		MyQueue<Patient> child = heapdata.get(index);
 		MyQueue<Patient> parent = heapdata.get((index-1)/2);
-		if (child.peek().compareTo(parent.peek()) > 0) {
+		if (child.compareTo(parent) > 0) {
 			this.swap(child, parent);
 			this.rebuildFromInsert((index-1)/2);
 		} else {
@@ -76,10 +81,10 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		MyQueue<Patient> leftChild = heapdata.get(2*index+1);
 		MyQueue<Patient> rightChild = heapdata.get(2*index+2);
 		
-		if (!(outOfBounds) && parent.peek().compareTo(leftChild.peek()) < 0) {
+		if (!(outOfBounds) && parent.compareTo(leftChild) < 0) {
 			swap(parent, leftChild);
 			this.rebuildFromRemove(2*index+1);
-		} else if (!(outOfBounds) && parent.peek().compareTo(rightChild.peek()) < 0) {
+		} else if (!(outOfBounds) && parent.compareTo(rightChild) < 0) {
 			swap(parent, rightChild);
 			this.rebuildFromRemove(2*index+2);
 		} else {
