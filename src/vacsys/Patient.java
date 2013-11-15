@@ -28,7 +28,7 @@ public class Patient implements Comparable<Patient> {
 	/**
 	 * Method to create a string representation of the data in a Patient object.
 	 * 
-	 * @return a string representation of the Patient, with newline at end
+	 * @return a string representation of the Patient, with newline at the end
 	 */
 	public String toString() {
 		return (name + "," + age + "," + zip + "," + priorityVal + "\n");

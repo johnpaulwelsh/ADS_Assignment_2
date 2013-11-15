@@ -3,6 +3,47 @@ package vacsys;
 import java.io.*;
 import java.util.HashMap;
 
+/*
+ * NOTES ON APPROACH
+ * *****************
+ * 
+ * VacSys
+ * ======
+ * I chose to use a HashMap in this class to keep track of the zpops for every
+ * zip code I came across when reading in from a file. I looped through the file
+ * once and calculated all the zpops, and looped through again to insert the
+ * Patients. Since the Patients' priorityVals needed to be based off of the whole
+ * population, not just those already in the system, I needed to know all zpops
+ * before inserting any Patients.
+ * 
+ * VasSysHeap
+ * ==========
+ * I chose to use an ArrayList as the main storage for the heap because it allows
+ * me to access specific indices so I can find the parent-child relationships
+ * with ease. However, I did not want to have to handle resizing the array myself,
+ * so I imported ArrayList to do it for me.
+ * I have another HashMap in this class to pair together priority values and
+ * entries in the heap. This HashMap is updated as I insert MyQueue objects. This
+ * way, I do not have to traverse the heap every time I want to look for a certain
+ * queue, such as when I am adding a new Patient and the queue it belongs in already
+ * exists.
+ * 
+ * MyQueue
+ * =======
+ * This is a class I wrote myself to represent a queue. I used a LinkedList as the
+ * underlying data storage structure because the only thing I need to do to a queue
+ * is add to one end and remove from the opposite end. LinkedLists lend very well
+ * to FIFO data structures since we cannot access the internal nodes directly, nor
+ * would we need to for this exercise.
+ * The MyQueue also has its own compareTo() method and priorityVal instance variable.
+ * This is because, sometimes, I need to know the priorityVal for a queue even after
+ * I've emptied the queue of all its Patients. Normally I could just peek at the queue
+ * but this will not work when the queue is empty, so as soon as the queue gains a
+ * member it adopts that member's priority value.
+ */
+
+
+
 public class VacSys {
 	protected VacSysPriorityQueue<Patient> vsh;
 	protected String filename;
@@ -62,8 +103,6 @@ public class VacSys {
 			System.err.format("BadFileFormat: %s%n", x);
 		}
 
-		System.out.println("Zpop mapping is done.");
-
 		// Insert Patients
 		try {
 			String line;
@@ -87,8 +126,6 @@ public class VacSys {
 		} catch (ArrayIndexOutOfBoundsException x) {
 			System.err.format("BadFileFormat: %s%n", x);
 		}
-
-		System.out.println("Insert from file is done.");
 	}
 
 	/**
@@ -177,6 +214,11 @@ public class VacSys {
 	 * @return true if the removals were successful, false otherwise
 	 */
 	public boolean remove(int num, String filename) {
+		// Checks to make sure we are not trying to remove more Patients than
+		// are in the system
+		if (num > tpop) {
+			num = tpop;
+		}
 		FileWriter fw;
 		try {
 			fw = new FileWriter(filename);

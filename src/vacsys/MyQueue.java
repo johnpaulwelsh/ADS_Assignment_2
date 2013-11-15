@@ -14,7 +14,7 @@ public class MyQueue<T> {
 	/**
 	 * Method that returns the size of the queue.
 	 * 
-	 * @return the size of the LinkedList that holds the queue's data
+	 * @return the number of elements in the queue
 	 */
 	public int queueSize() {
 		return queuedata.size();
@@ -23,7 +23,7 @@ public class MyQueue<T> {
 	/**
 	 * Method to determine whether the queue is empty.
 	 * 
-	 * @return true if the LinkedList 'queuedata' is empty, false otherwise
+	 * @return true if the queue is empty, false otherwise
 	 */
 	public boolean isEmpty() {
 		return queuedata.isEmpty();

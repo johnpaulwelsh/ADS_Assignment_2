@@ -10,7 +10,14 @@ public interface VacSysPriorityQueue<T> {
 	public boolean isEmpty();
 
 	/**
-	 * Method to insert a Patient into the priority queue
+	 * Method to determine the size of the priority queue.
+	 * 
+	 * @return the number of elements in the priority queue
+	 */
+	public int heapSize();
+
+	/**
+	 * Method to insert a Patient into the priority queue.
 	 * 
 	 * @param item
 	 *            the Patient being inserted
@@ -18,11 +25,9 @@ public interface VacSysPriorityQueue<T> {
 	public void insert(Patient item);
 
 	/**
-	 * Method to remove a Patient from the priority queue
+	 * Method to remove a Patient from the priority queue.
 	 * 
 	 * @return a to-string interpretation of the Patient being removed
 	 */
 	public String remove();
-	
-	public void printHeap();
 }
