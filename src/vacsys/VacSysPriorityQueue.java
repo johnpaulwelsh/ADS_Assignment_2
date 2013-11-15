@@ -23,4 +23,6 @@ public interface VacSysPriorityQueue<T> {
 	 * @return a to-string interpretation of the Patient being removed
 	 */
 	public String remove();
+	
+	public void printHeap();
 }

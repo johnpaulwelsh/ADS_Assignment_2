@@ -14,6 +14,12 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		this.queuehash = new HashMap<Integer, MyQueue<Patient>>();
 	}
 
+	public void printHeap() {
+		for (int i = 0; i < heapdata.size(); i++) {
+			System.out.println("Queue: " + heapdata.get(i).priorityVal);
+		}
+	}
+	
 	@Override
 	public boolean isEmpty() {
 		return heapdata.isEmpty();
@@ -29,7 +35,7 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 			// Enqueue the patient
 			existingQueue.enqueue(item);
 
-			// The queue we need is not in the heap, or the heap is empty
+		// The queue we need is not in the heap, or the heap is empty
 		} else {
 			// Make a new queue
 			MyQueue<Patient> nQueue = new MyQueue<Patient>();
@@ -50,8 +56,11 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 	private void rebuildFromInsert(int index) {
 		MyQueue<Patient> child = heapdata.get(index);
 		MyQueue<Patient> parent = heapdata.get((index-1)/2);
+		// If the child is greater than the parent
 		if (child.compareTo(parent) > 0) {
+			// Swap them
 			this.swap(child, parent, index, (index-1)/2);
+			// Continue with recursion starting with the parent
 			this.rebuildFromInsert((index-1)/2);
 		} else {
 			return;
@@ -108,31 +117,48 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		return removedPat.toString();
 	}
 
-	// HERE BE THE ERROR ------V
 	private void rebuildFromRemove(int index) {
+		MyQueue<Patient> parent = heapdata.get(index);
+		
+		// Boolean variables that are true if the currant parent's left or right child
+		// do not exist (their ArrayList index is out of bounds)
 		boolean rightOOB = (2*index+2 >= heapdata.size());
 		boolean leftOOB = (2*index+1 >= heapdata.size());
-		MyQueue<Patient> parent = heapdata.get(index);
 		
 		// Neither the left nor right child is out of bounds, they both exist
 		if (!leftOOB && !rightOOB) {
 			MyQueue<Patient> leftChild = heapdata.get(2*index+1);
 			MyQueue<Patient> rightChild = heapdata.get(2*index+2);
-			// Check to see which child is bigger, swap with that one
-			if (leftChild.priorityVal > rightChild.priorityVal) {
-				this.swap(leftChild, parent, 2*index+1, index);
-				this.rebuildFromRemove(2*index+1);
+			// If the left child is bigger than the right child
+			if (leftChild.compareTo(rightChild) > 0) {
+				// Check if we need to swap the parent and child
+				if (leftChild.compareTo(parent) > 0) {
+					// Swap them
+					this.swap(leftChild, parent, 2*index+1, index);
+					// Continue recursion with the original parent's left child
+					this.rebuildFromRemove(2*index+1);
+				}
+			// If the right child is bigger than the left child	
 			} else {
-				this.swap(leftChild, parent, 2*index+1, index);
-				this.rebuildFromRemove(2*index+2);
+				// Check if we need to swap the parent and child
+				if (rightChild.compareTo(parent) > 0) {
+					// Swap them
+					// HAHAHAHAHAHAHA I LEFT THIS AS LEFTCHILD AND 2*INDEX+1 HAHAHAHAHAHAHAHA
+					this.swap(rightChild, parent, 2*index+2, index);
+					this.rebuildFromRemove(2*index+2);
+				}
+				
 			}
 		
 		// The right child is out of bounds, the left exists
 		} else if (!leftOOB && rightOOB) {
 			MyQueue<Patient> leftChild = heapdata.get(2*index+1);
-			// Swap the parent with the left child
-			this.swap(leftChild, parent, 2*index+1, index);
-		
+			// Check to see if we need to swap the parent and child
+			if (leftChild.compareTo(parent) > 0) {
+				// Swap the parent with the left child
+				this.swap(leftChild, parent, 2*index+1, index);
+			}
+			
 		// Both the left child and right child are out of bounds of the Arraylist
 		} else {
 			// You're done!
@@ -144,11 +170,5 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		//     that means left is leaf, swap and you're done
 		// neither are null
 		//     pick which one is bigger!!!
-	}
-
-	public void printHeap() {
-		for (int i = 0; i < heapdata.size(); i++) {
-			System.out.println("Queue: " + heapdata.get(i).priorityVal);
-		}
 	}
 }
