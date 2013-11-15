@@ -2,10 +2,34 @@ package vacsys;
 
 import java.util.LinkedList;
 
+/*
+ * NOTES ON APPROACH
+ * *****************
+ * 
+ * This is a class I wrote myself to represent a queue. I used a LinkedList as the
+ * underlying data storage structure because the only thing I need to do to a queue
+ * is add to one end and remove from the opposite end. LinkedLists lend very well
+ * to FIFO data structures since we cannot access the internal nodes directly, nor
+ * would we need to for this exercise.
+ * The MyQueue also has its own compareTo() method and priorityVal instance variable.
+ * This is because, sometimes, I need to know the priorityVal for a queue even after
+ * I've emptied the queue of all its Patients. Normally I could just peek at the queue
+ * but this will not work when the queue is empty, so as soon as the queue gains a
+ * member it adopts that member's priority value.
+ */
+
+/**
+ * Class to define a MyQueue object.
+ * 
+ * @author John Paul Welsh
+ */
 public class MyQueue<T> {
 	protected LinkedList<Patient> queuedata;
 	protected int priorityVal;
 
+	/**
+	 * Constructor to create a new MyQueue.
+	 */
 	public MyQueue() {
 		this.queuedata = new LinkedList<Patient>();
 		this.priorityVal = 0;

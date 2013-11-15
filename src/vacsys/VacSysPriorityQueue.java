@@ -1,5 +1,10 @@
 package vacsys;
 
+/**
+ * Class to define a VacSysPriorityQueue interface.
+ * 
+ * @author John Paul Welsh
+ */
 public interface VacSysPriorityQueue<T> {
 
 	/**

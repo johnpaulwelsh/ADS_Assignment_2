@@ -7,56 +7,43 @@ import java.util.HashMap;
  * NOTES ON APPROACH
  * *****************
  * 
- * VacSys
- * ======
  * I chose to use a HashMap in this class to keep track of the zpops for every
  * zip code I came across when reading in from a file. I looped through the file
  * once and calculated all the zpops, and looped through again to insert the
  * Patients. Since the Patients' priorityVals needed to be based off of the whole
  * population, not just those already in the system, I needed to know all zpops
  * before inserting any Patients.
- * 
- * VasSysHeap
- * ==========
- * I chose to use an ArrayList as the main storage for the heap because it allows
- * me to access specific indices so I can find the parent-child relationships
- * with ease. However, I did not want to have to handle resizing the array myself,
- * so I imported ArrayList to do it for me.
- * I have another HashMap in this class to pair together priority values and
- * entries in the heap. This HashMap is updated as I insert MyQueue objects. This
- * way, I do not have to traverse the heap every time I want to look for a certain
- * queue, such as when I am adding a new Patient and the queue it belongs in already
- * exists.
- * 
- * MyQueue
- * =======
- * This is a class I wrote myself to represent a queue. I used a LinkedList as the
- * underlying data storage structure because the only thing I need to do to a queue
- * is add to one end and remove from the opposite end. LinkedLists lend very well
- * to FIFO data structures since we cannot access the internal nodes directly, nor
- * would we need to for this exercise.
- * The MyQueue also has its own compareTo() method and priorityVal instance variable.
- * This is because, sometimes, I need to know the priorityVal for a queue even after
- * I've emptied the queue of all its Patients. Normally I could just peek at the queue
- * but this will not work when the queue is empty, so as soon as the queue gains a
- * member it adopts that member's priority value.
  */
 
-
-
+/**
+ * Class to define a VacSys system.
+ * 
+ * @author John Paul Welsh
+ */
 public class VacSys {
-	protected VacSysPriorityQueue<Patient> vsh;
+	protected VacSysHeap<Patient> vsh;
 	protected String filename;
 	protected int tpop;
 	protected int zpop;
 	protected HashMap<Integer, Integer> ziphash;
 
+	/**
+	 * Constructor to create a new blank VacSys and initializing the HashMap for
+	 * storing zpops.
+	 */
 	public VacSys() {
 		this.vsh = new VacSysHeap<Patient>();
 		this.ziphash = new HashMap<Integer, Integer>();
 		tpop = 0;
 	}
 
+	/**
+	 * Constructor to create a new VacSys that will be filled with Patients from
+	 * a file.
+	 * 
+	 * @param filename
+	 *            path to and name of file from which to import Patients
+	 */
 	public VacSys(String filename) {
 		this.vsh = new VacSysHeap<Patient>();
 		this.ziphash = new HashMap<Integer, Integer>();
@@ -66,7 +53,8 @@ public class VacSys {
 
 	/**
 	 * Private method to calculate the zpops for Patients read in from a file,
-	 * and insert them into the VacSysHeap.
+	 * and insert them into the VacSysHeap. Implemented in parameterized
+	 * constructor.
 	 */
 	private void populate() {
 		// Calculate all zpops and puts them into ziphash
@@ -77,12 +65,10 @@ public class VacSys {
 					this.filename));
 			while ((line = reader.readLine()) != null) {
 				linelist = line.split(",");
-
 				// Strips all strings of leading and trailing whitespace
 				for (int i = 0; i < linelist.length; i++) {
 					linelist[i] = linelist[i].trim();
 				}
-
 				// Checks if this zip code is in the hashmap already
 				int currZip = Integer.parseInt(linelist[2]);
 				// If it is, increment keyed value
@@ -93,10 +79,10 @@ public class VacSys {
 				} else {
 					ziphash.put(currZip, 1);
 				}
-
 				// Increment tpop
 				tpop++;
 			}
+			reader.close();
 		} catch (IOException x) {
 			System.err.format("IOException: %s%n", x);
 		} catch (ArrayIndexOutOfBoundsException x) {
@@ -111,16 +97,15 @@ public class VacSys {
 					this.filename));
 			while ((line = reader.readLine()) != null) {
 				linelist = line.split(",");
-
 				// Strips all strings of leading and trailing whitespace
 				for (int i = 0; i < linelist.length; i++) {
 					linelist[i] = linelist[i].trim();
 				}
-
 				// Inserts patient (from file, so set boolean to true)
 				this.insert(linelist[0], Integer.parseInt(linelist[1]),
 						Integer.parseInt(linelist[2]), true);
 			}
+			reader.close();
 		} catch (IOException x) {
 			System.err.format("IOException: %s%n", x);
 		} catch (ArrayIndexOutOfBoundsException x) {
@@ -162,24 +147,24 @@ public class VacSys {
 	 * @return true if the Patient was inserted successfully
 	 */
 	public boolean insert(String name, int age, int zip, boolean readFromFile) {
-		// Checks if this zip code is in the hashmap already
-		// We don't do this when readFromFile is true because it was already
-		// done in the populate() method
+		// Checks if this zip code is in the hashmap already. We don't do this
+		// when readFromFile is true because it was already done in the
+		// populate() method
 		if (readFromFile == false) {
-			if (ziphash.containsKey(zip)) {
+			if (ziphash.containsKey(zip)) { // ERROR ERROR ERROR
 				int currVal = ziphash.get(zip);
 				ziphash.put(zip, currVal + 1);
 			} else {
 				ziphash.put(zip, 1);
 			}
+			// Increment tpop since normally that would happen in populate()
+			tpop++;
 		}
-
 		// Calculates zpop for this patient
 		zpop = ziphash.get(zip);
 		float fzpop = (float) zpop;
 		float ftpop = (float) tpop;
 		int priorityVal = (int) ((Math.abs(35 - age) / 5.0) + ((fzpop / ftpop) * 10.0));
-
 		Patient p = new Patient(name, age, zip, priorityVal);
 		vsh.insert(p);
 		return true;
@@ -191,16 +176,40 @@ public class VacSys {
 	 * @return a String representation of the Patient that was removed
 	 */
 	public String remove() {
-
-		// DECREMENT ENTRY IN ZIPHASH: DO THIS LATER
-		/*
-		 * int currVal = ziphash.get(vsh.heapdata.get(0).peek().zip);
-		 * ziphash.put(vsh.heapdata.get(0).peek().zip, currVal-1);
-		 */
-		// Decrement tpop
-		tpop--;
-
-		return vsh.remove();
+		// Store the removed Patient (in string form)
+		String removed = vsh.remove();
+		// Check to make sure the heap is not empty
+		if (!(vsh.heapdata.isEmpty())) {
+			// Split up the string into pieces
+			String[] removedList = removed.split(",");
+			// Strips all strings of leading and trailing whitespace
+			for (int i = 0; i < removedList.length; i++) {
+				removedList[i] = removedList[i].trim();
+			}
+			// Store the zip code (in Integer form)
+			int removedZip = Integer.parseInt(removedList[2]);
+			// Get the zpop for the removed Patient's zip code
+			int currVal = ziphash.get(removedZip);
+			// Decrement the zpop for the removed Patient's zip code
+			ziphash.put(removedZip, currVal-1);
+			// Decrement tpop
+			tpop--;
+		// If the heap is empty
+		} else {
+			// Clear out everything, reset all variables
+			this.clear();
+		}
+		return removed;
+	}
+	
+	/**
+	 * Method to reset the VacSys once we empty the heap.
+	 */
+	private void clear() {
+		vsh = new VacSysHeap<Patient>();
+		ziphash = new HashMap<Integer, Integer>();
+		tpop = 0;
+		zpop = 0;
 	}
 
 	/**

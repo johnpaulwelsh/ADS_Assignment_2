@@ -3,10 +3,34 @@ package vacsys;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/*
+ * NOTES ON APPROACH
+ * *****************
+ * 
+ * I chose to use an ArrayList as the main storage for the heap because it allows
+ * me to access specific indices so I can find the parent-child relationships
+ * with ease. However, I did not want to have to handle resizing the array myself,
+ * so I imported ArrayList to do it for me.
+ * I have another HashMap in this class to pair together priority values and
+ * entries in the heap. This HashMap is updated as I insert MyQueue objects. This
+ * way, I do not have to traverse the heap every time I want to look for a certain
+ * queue, such as when I am adding a new Patient and the queue it belongs in already
+ * exists.
+ */
+
+/**
+ * Class to define a VacSysHeap object, which implements a VacSysPriorityQueue.
+ * 
+ * @author John Paul Welsh
+ */
 public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 	protected ArrayList<MyQueue<Patient>> heapdata;
 	protected HashMap<Integer, MyQueue<Patient>> queuehash;
 
+	/**
+	 * Constructor to create a new VacSysHeap and initialize the HashMap for
+	 * storing queues.
+	 */
 	public VacSysHeap() {
 		this.heapdata = new ArrayList<MyQueue<Patient>>();
 		this.queuehash = new HashMap<Integer, MyQueue<Patient>>();
@@ -117,10 +141,7 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 	public String remove() {
 		// Store top queue from heap
 		MyQueue<Patient> topQueue = heapdata.get(0);
-
-		// POSSIBLY REMOVE FROM ZIPHASH IN HERE, AFTER CHECKING THAT WE NEED TO
-		// Otherwise, do it in VacSys.java where the code already is
-
+		
 		// Store next patient from top queue
 		Patient removedPat = topQueue.dequeue();
 
@@ -128,13 +149,10 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		// in the heap. Note: this usually ends up happening because we
 		// just removed the last one in the line above
 		if (topQueue.isEmpty()) {
-
 			// Store last queue from heap
 			MyQueue<Patient> lastQueue = heapdata.get(heapdata.size() - 1);
 			// Remove top queue from hash
 			queuehash.remove(topQueue);
-			// Remove top queue from heap
-			// heapdata.remove(0);
 			// Move last queue into top spot and remove it
 			heapdata.set(0, lastQueue);
 			heapdata.remove(heapdata.size() - 1);
@@ -186,9 +204,7 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 					// Continue recursion with the original parent's right child
 					this.rebuildFromRemove(2 * index + 2);
 				}
-
 			}
-
 		// The right child is out of bounds, the left exists
 		} else if (!leftOOB && rightOOB) {
 			MyQueue<Patient> leftChild = heapdata.get(2 * index + 1);
@@ -197,7 +213,6 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 				// Swap the parent with the left child
 				this.swap(leftChild, parent, 2 * index + 1, index);
 			}
-
 		// Both the left child and right child are out of bounds
 		} else {
 			// You're done!

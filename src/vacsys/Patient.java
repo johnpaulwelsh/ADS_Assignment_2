@@ -1,11 +1,28 @@
 package vacsys;
 
+/**
+ * Class to define a Patient object.
+ * 
+ * @author John Paul Welsh
+ */
 public class Patient implements Comparable<Patient> {
 	protected String name;
 	protected int age;
 	protected int zip;
 	protected int priorityVal;
 
+	/**
+	 * Constructor to create a new Patient.
+	 * 
+	 * @param name
+	 *            the name of the Patient
+	 * @param age
+	 *            the age of the Patient
+	 * @param zip
+	 *            the zip code of the Patient
+	 * @param priorityVal
+	 *            the priority value of the Patient
+	 */
 	public Patient(String name, int age, int zip, int priorityVal) {
 		this.name = name;
 		this.age = age;
