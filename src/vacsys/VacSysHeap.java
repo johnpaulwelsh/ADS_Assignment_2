@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 	protected ArrayList<MyQueue<Patient>> heapdata;
-	protected HashMap<Integer, MyQueue<Patient>> queuehash; // key = priorityVal, value = queue
+	protected HashMap<Integer, MyQueue<Patient>> queuehash;
+
+	// key = priorityVal, value = queue
 
 	public VacSysHeap() {
 		this.heapdata = new ArrayList<MyQueue<Patient>>();
@@ -38,11 +40,9 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 			// Add it to queuehash
 			queuehash.put(nQueue.priorityVal, nQueue);
 
-			//System.out.println("Added queue with priority " + nQueue.priorityVal);
-
 			// If the heap wasn't empty to start with
 			if (heapdata.size() > 1) {
-				rebuildFromInsert(heapdata.size()-1);
+				this.rebuildFromInsert(heapdata.size() - 1);
 			}
 		}
 	}
@@ -58,11 +58,13 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		}
 	}
 
-	private void swap(MyQueue<Patient> child, MyQueue<Patient> parent, int childIndex, int parentIndex) {
+	private void swap(MyQueue<Patient> child, MyQueue<Patient> parent,
+			int childIndex, int parentIndex) {
 		MyQueue<Patient> temp = child;
 		heapdata.set(childIndex, parent);
 		heapdata.set(parentIndex, temp);
-		System.out.println("Child: " + child.priorityVal + " swapped with Parent: " + parent.priorityVal);
+		System.out.println("Child: " + child.priorityVal
+				+ " swapped with Parent: " + parent.priorityVal);
 	}
 
 	@Override
@@ -71,27 +73,28 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		MyQueue<Patient> topQueue = heapdata.get(0);
 
 		// POSSIBLY REMOVE FROM ZIPHASH IN HERE, AFTER CHECKING THAT WE NEED TO
+		// Otherwise, do it in VacSys.java where the code already is
 
 		// Store next patient from top queue
 		Patient removedPat = topQueue.dequeue();
 
-		// Could be the case because we just removed the last one in the line above
+		// Could be the case because we just removed the last one
 		if (topQueue.isEmpty()) {
 
-			System.out.println("The top queue is empty.");
+			System.out.println("The top queue is now empty.");
 
 			// Store last queue from heap
-			MyQueue<Patient> lastQueue = heapdata.get(heapdata.size()-1);
+			MyQueue<Patient> lastQueue = heapdata.get(heapdata.size() - 1);
 			// Remove top queue from hash
 			queuehash.remove(topQueue);
 			// Remove top queue from heap
-			heapdata.remove(0);
-			// Remove last queue and move into top spot
+			//heapdata.remove(0);
+			// Move last queue into top spot and remove it
 			heapdata.set(0, lastQueue);
-			heapdata.remove(heapdata.size()-1);
+			heapdata.remove(heapdata.size() - 1);
 			// Trickle down
-			rebuildFromRemove(0);
-			
+			this.rebuildFromRemove(0);
+
 			System.out.println("Done rebuilding.");
 
 			for (int i = 0; i < heapdata.size(); i++) {
@@ -105,34 +108,37 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 
 	// HERE BE THE ERROR ------V
 	private void rebuildFromRemove(int index) {
-		boolean outOfBounds = (index > heapdata.size());
+
+		boolean outOfBounds = (2*index+1 > heapdata.size());
 		MyQueue<Patient> parent = heapdata.get(index);
 		MyQueue<Patient> leftChild = heapdata.get(2*index+1);
 		MyQueue<Patient> rightChild = heapdata.get(2*index+2);
-
-		/*if (!(outOfBounds)) {
-			if (parent.compareTo(leftChild) < 0) {
-				swap(leftChild, parent, 2*index+1, index);
-				this.rebuildFromRemove(2*index+1);
-			} else if (parent.compareTo(rightChild) < 0) {
-				swap(rightChild, parent, 2*index+2, index);
-				this.rebuildFromRemove(2*index+2);
-			} else {
-				return;
-			}
-		} else {
-			return;
-		}*/
 		
-		if (!(outOfBounds) && parent.compareTo(leftChild) < 0) {
-			swap(leftChild, parent, 2*index+1, index);
+		// We are not out of bounds AND the left child is bigger than the parent
+		if (!(outOfBounds) && leftChild.compareTo(parent) > 0) {
+			// Switch the parent with its left child
+			this.swap(leftChild, parent, 2*index+1, index);
+			// Continue recursion, starting with where the parent is now
 			this.rebuildFromRemove(2*index+1);
-		} else if (!(outOfBounds) && parent.compareTo(rightChild) < 0) {
-			swap(rightChild, parent, 2*index+2, index);
+
+		// We are not out of bounds AND the right child is bigger than the parent
+		} if (!(outOfBounds) && rightChild.compareTo(parent) > 0) {
+			// Switch the parent with its right child
+			this.swap(rightChild, parent, 2*index+2, index);
+			// Continue recursion, starting with where the parent is now
 			this.rebuildFromRemove(2*index+2);
-		} else {
-			return;
-		}
 		
+		// Either the current index is out of bounds OR
+		// 		the element is where it needs to be
+		} else {
+			// STOP
+			return;
+		}		
+	}
+
+	public void printHeap() {
+		for (int i = 0; i < heapdata.size(); i++) {
+			System.out.println("Queue: " + heapdata.get(i).priorityVal);
+		}
 	}
 }
