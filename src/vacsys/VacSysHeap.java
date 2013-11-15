@@ -108,8 +108,42 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 
 	// HERE BE THE ERROR ------V
 	private void rebuildFromRemove(int index) {
-
-		boolean outOfBounds = (2*index+1 > heapdata.size());
+		
+		boolean rightOOB = (2*index+2 >= heapdata.size());
+		boolean leftOOB = (2*index+1 >= heapdata.size());
+		
+		MyQueue<Patient> parent = heapdata.get(index);
+		
+		// Both the left child and right child are out of bounds of the Arraylist
+		if (leftOOB && rightOOB) {
+			// You're done!
+			return;
+		
+		// The right child is out of bounds, the left exists
+		} else if (rightOOB) {
+			MyQueue<Patient> leftChild = heapdata.get(2*index+1);
+			this.swap(leftChild, parent, 2*index+1, index);
+		
+		// Neither are out of bounds, they both exist
+		} else {
+			MyQueue<Patient> leftChild = heapdata.get(2*index+1);
+			MyQueue<Patient> rightChild = heapdata.get(2*index+2);
+			// Check to see which child is bigger, swap with that one
+			if (leftChild.priorityVal > rightChild.priorityVal) {
+				this.swap(leftChild, parent, 2*index+1, index);
+			} else {
+				this.swap(leftChild, parent, 2*index+1, index);
+			}
+		}
+		
+		// left and right are null
+		// right is null
+		//     that means left is leaf, swap and you're done
+		// neither are null
+		//     pick which one is bigger!!!
+		
+		/*
+		boolean outOfBounds = (2*index+1 >= heapdata.size());
 		MyQueue<Patient> parent = heapdata.get(index);
 		MyQueue<Patient> leftChild = heapdata.get(2*index+1);
 		MyQueue<Patient> rightChild = heapdata.get(2*index+2);
@@ -133,7 +167,8 @@ public class VacSysHeap<T> implements VacSysPriorityQueue<T> {
 		} else {
 			// STOP
 			return;
-		}		
+		}
+		*/
 	}
 
 	public void printHeap() {
