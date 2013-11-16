@@ -48,6 +48,6 @@ public class Patient implements Comparable<Patient> {
 	 * @return a string representation of the Patient, with newline at the end
 	 */
 	public String toString() {
-		return (name + "," + age + "," + zip + "," + "\n");
+		return (name + ", " + age + ", " + zip + "\n");
 	}
 }

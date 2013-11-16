@@ -75,7 +75,7 @@ public class VacSys {
 				if (ziphash.containsKey(currZip)) {
 					int currVal = ziphash.get(currZip);
 					ziphash.put(currZip, currVal + 1);
-					// If not, enter it as a new key and set it to 1
+				// If not, enter it as a new key and set it to 1
 				} else {
 					ziphash.put(currZip, 1);
 				}
@@ -144,17 +144,21 @@ public class VacSys {
 	 * @param readFromFile
 	 *            determines whether we are inserting this Patient from a file
 	 *            or manually
-	 * @return true if the Patient was inserted successfully
+	 * @return true if the Patient was inserted successfully, false otherwise
 	 */
 	public boolean insert(String name, int age, String zip, boolean readFromFile) {
 		// Checks if this zip code is in the hashmap already. We don't do this
 		// when readFromFile is true because it was already done in the
 		// populate() method
 		if (readFromFile == false) {
-			if (ziphash.containsKey(zip)) { // ERROR ERROR ERROR
+			// If the zip code is in the hashmap already...
+			if (ziphash.containsKey(zip)) {
+				// Increment the paired value
 				int currVal = ziphash.get(zip);
 				ziphash.put(zip, currVal + 1);
+			// Otherwise...
 			} else {
+				// Put it there with an initial value of 1
 				ziphash.put(zip, 1);
 			}
 			// Increment tpop since normally that would happen in populate()
@@ -165,7 +169,9 @@ public class VacSys {
 		float fzpop = (float) zpop;
 		float ftpop = (float) tpop;
 		int priorityVal = (int) ((Math.abs(35 - age) / 5.0) + ((fzpop / ftpop) * 10.0));
+		// Create a new Patient
 		Patient p = new Patient(name, age, zip, priorityVal);
+		// Insert the Patient
 		vsh.insert(p);
 		return true;
 	}
@@ -178,7 +184,7 @@ public class VacSys {
 	public String remove() {
 		// Store the removed Patient (in string form)
 		String removed = vsh.remove();
-		// Check to make sure the heap is not empty
+		// If the heap is not empty...
 		if (!(vsh.heapdata.isEmpty())) {
 			// Split up the string into pieces
 			String[] removedList = removed.split(",");
@@ -194,7 +200,7 @@ public class VacSys {
 			ziphash.put(removedZip, currVal-1);
 			// Decrement tpop
 			tpop--;
-		// If the heap is empty
+		// If the heap is empty...
 		} else {
 			// Clear out everything, reset all variables
 			this.clear();

@@ -28,7 +28,8 @@ public class MyQueue<T> {
 	protected int priorityVal;
 
 	/**
-	 * Constructor to create a new MyQueue.
+	 * Constructor to create a new MyQueue. Sets the initial priority value
+	 * to zero.
 	 */
 	public MyQueue() {
 		this.queuedata = new LinkedList<Patient>();
