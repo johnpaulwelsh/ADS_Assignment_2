@@ -8,7 +8,7 @@ package vacsys;
 public class Patient implements Comparable<Patient> {
 	protected String name;
 	protected int age;
-	protected int zip;
+	protected String zip;
 	protected int priorityVal;
 
 	/**
@@ -23,7 +23,7 @@ public class Patient implements Comparable<Patient> {
 	 * @param priorityVal
 	 *            the priority value of the Patient
 	 */
-	public Patient(String name, int age, int zip, int priorityVal) {
+	public Patient(String name, int age, String zip, int priorityVal) {
 		this.name = name;
 		this.age = age;
 		this.zip = zip;
@@ -48,6 +48,6 @@ public class Patient implements Comparable<Patient> {
 	 * @return a string representation of the Patient, with newline at the end
 	 */
 	public String toString() {
-		return (name + "," + age + "," + zip + "," + priorityVal + "\n");
+		return (name + "," + age + "," + zip + "," + "\n");
 	}
 }

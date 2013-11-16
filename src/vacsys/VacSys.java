@@ -25,7 +25,7 @@ public class VacSys {
 	protected String filename;
 	protected int tpop;
 	protected int zpop;
-	protected HashMap<Integer, Integer> ziphash;
+	protected HashMap<String, Integer> ziphash;
 
 	/**
 	 * Constructor to create a new blank VacSys and initializing the HashMap for
@@ -33,7 +33,7 @@ public class VacSys {
 	 */
 	public VacSys() {
 		this.vsh = new VacSysHeap<Patient>();
-		this.ziphash = new HashMap<Integer, Integer>();
+		this.ziphash = new HashMap<String, Integer>();
 		tpop = 0;
 	}
 
@@ -46,7 +46,7 @@ public class VacSys {
 	 */
 	public VacSys(String filename) {
 		this.vsh = new VacSysHeap<Patient>();
-		this.ziphash = new HashMap<Integer, Integer>();
+		this.ziphash = new HashMap<String, Integer>();
 		this.filename = filename;
 		this.populate();
 	}
@@ -70,7 +70,7 @@ public class VacSys {
 					linelist[i] = linelist[i].trim();
 				}
 				// Checks if this zip code is in the hashmap already
-				int currZip = Integer.parseInt(linelist[2]);
+				String currZip = linelist[2];
 				// If it is, increment keyed value
 				if (ziphash.containsKey(currZip)) {
 					int currVal = ziphash.get(currZip);
@@ -103,7 +103,7 @@ public class VacSys {
 				}
 				// Inserts patient (from file, so set boolean to true)
 				this.insert(linelist[0], Integer.parseInt(linelist[1]),
-						Integer.parseInt(linelist[2]), true);
+						linelist[2], true);
 			}
 			reader.close();
 		} catch (IOException x) {
@@ -127,7 +127,7 @@ public class VacSys {
 	 * @return true if calling the other insert method was successful, false
 	 *         otherwise
 	 */
-	public boolean insert(String name, int age, int zip) {
+	public boolean insert(String name, int age, String zip) {
 		return this.insert(name, age, zip, false);
 	}
 
@@ -146,7 +146,7 @@ public class VacSys {
 	 *            or manually
 	 * @return true if the Patient was inserted successfully
 	 */
-	public boolean insert(String name, int age, int zip, boolean readFromFile) {
+	public boolean insert(String name, int age, String zip, boolean readFromFile) {
 		// Checks if this zip code is in the hashmap already. We don't do this
 		// when readFromFile is true because it was already done in the
 		// populate() method
@@ -187,7 +187,7 @@ public class VacSys {
 				removedList[i] = removedList[i].trim();
 			}
 			// Store the zip code (in Integer form)
-			int removedZip = Integer.parseInt(removedList[2]);
+			String removedZip = removedList[2];
 			// Get the zpop for the removed Patient's zip code
 			int currVal = ziphash.get(removedZip);
 			// Decrement the zpop for the removed Patient's zip code
@@ -207,7 +207,7 @@ public class VacSys {
 	 */
 	private void clear() {
 		vsh = new VacSysHeap<Patient>();
-		ziphash = new HashMap<Integer, Integer>();
+		ziphash = new HashMap<String, Integer>();
 		tpop = 0;
 		zpop = 0;
 	}
